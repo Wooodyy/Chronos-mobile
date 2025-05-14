@@ -1,22 +1,35 @@
 {
   "expo": {
-    "name": "Chronos.app",
-    "slug": "Chronos.app",
+    "name": "Chronos",
+    "slug": "chronos-app",
+    "owner": "wooooodyyy",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
+    "splash": {
+      "image": "./assets/images/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
     "scheme": "chronosapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+        "infoPlist": {
+        "NSMicrophoneUsageDescription": "Это приложение использует микрофон для голосовых функций."
+      }
     },
     "android": {
+      "permissions": [
+        "RECORD_AUDIO"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.wooooodyyy.chronosapp"
     },
     "web": {
       "bundler": "metro",
@@ -37,6 +50,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "3f699a52-6afd-4c1f-ae0d-2cf7758f629a"
+      }
     }
   }
 }

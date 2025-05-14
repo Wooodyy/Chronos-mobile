@@ -1,29 +1,80 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import React, { useEffect } from 'react';
+import { SafeAreaView, StyleSheet, StatusBar, Platform, View, Alert } from 'react-native';
+import { WebView } from 'react-native-webview';
+import { Audio } from 'expo-av';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+const INJECTED_JAVASCRIPT = `(function() {
+  var meta = document.createElement('meta');
+  meta.name = 'viewport';
+  meta.content = 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no';
+  document.head.appendChild(meta);
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+  var style = document.createElement('style');
+  style.type = 'text/css';
+  style.appendChild(document.createTextNode(
+    \`
+    html, body, * {
+      touch-action: pan-y pan-x;
+      overscroll-behavior: contain;
+    }
+    input, textarea, select {
+      font-size: 16px !important;
+    }
+    \`
+  ));
+  document.head.appendChild(style);
+})();`;
 
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
-  }
+const MyWebView = () => {
+  const statusBarColor = '#18181b';
+
+   useEffect(() => {
+    const askMicrophonePermission = async () => {
+      const { status } = await Audio.requestPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Микрофон', 'Разрешение не предоставлено. Некоторые функции могут не работать.');
+      }
+    };
+
+    askMicrophonePermission();
+  }, []);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <View style={styles.root}>
+      <StatusBar backgroundColor={statusBarColor} barStyle="light-content" />
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: statusBarColor }]}>
+        <WebView
+          source={{ uri: 'https://test-chronos.netlify.app' }}
+          injectedJavaScript={INJECTED_JAVASCRIPT}
+          onMessage={() => {}}
+          scalesPageToFit={false}
+          setBuiltInZoomControls={false}
+          setDisplayZoomControls={false}
+          bounces={false}
+          overScrollMode="never"
+          javaScriptEnabled={true}
+          style={styles.webview}
+          mediaPlaybackRequiresUserAction={false} // позволяет воспроизведение медиа без клика
+        />
+      </SafeAreaView>
+    </View>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: '#18181b',
+  },
+  safeArea: {
+    flex: 1,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+  },
+  webview: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+});
+
+export default MyWebView;
