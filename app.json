@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Chronos",
-    "slug": "chronos-app",
+    "name": "FinTrack",
+    "slug": "fintrack-app",
     "owner": "wooooodyyy",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -11,13 +11,13 @@
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
-    "scheme": "chronosapp",
+    "scheme": "fintrackapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-        "infoPlist": {
-        "NSMicrophoneUsageDescription": "Это приложение использует микрофон для голосовых функций."
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Личные финансы"
       }
     },
     "android": {
@@ -29,7 +29,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.wooooodyyy.chronosapp"
+      "package": "com.wooooodyyy.fintrackapp"
     },
     "web": {
       "bundler": "metro",
@@ -44,9 +44,25 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#000000"
         }
-      ]
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Личные финансы",
+          "recordAudioAndroid": true
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "15.1"
+          }
+        }
+      ],
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true
